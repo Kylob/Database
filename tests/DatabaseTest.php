@@ -37,10 +37,6 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
         if (is_file(self::$file)) {
             unlink(self::$file);
         }
-        $page = Page::html();
-        if (is_file($page->file('databases.yml'))) {
-            unlink($page->file('databases.yml'));
-        }
     }
 
     public function testConstructor()
