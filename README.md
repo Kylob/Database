@@ -140,7 +140,7 @@ if ($janitor = $db->row('SELECT id, name FROM employees WHERE title = ?', 'Janit
 // Get a total head count
 echo $db->value('SELECT COUNT(*) FROM employees'); // 7
 
-// Prepare for the worst
+// Trim off the fat
 $db->exec('DELETE FROM employees WHERE id = ?', 102);
 ```
 
