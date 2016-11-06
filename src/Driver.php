@@ -40,8 +40,17 @@ class Driver
      * @param string|null $password The password for the DSN string. This parameter is optional for some PDO drivers.
      * @param array       $options  An ``array('key'=>'value', ...)`` of driver-specific connection options.
      * @param array       $exec     Queries you would like to execute upon connecting to the database.
-     * 
+     *
      * @see http://php.net/manual/en/pdo.construct.php
+     *
+     * @example
+     * ```php
+     * use BootPress\Database\Component as Database;
+     *
+     * $db = new Database('mysql:dbname=test;host=127.0.0.1', 'localhost', 'root', array(), array(
+     *     'SET timezone = "GMT"',
+     * ));
+     * ```
      */
     public function __construct($dsn, $username = null, $password = null, array $options = array(), array $exec = array())
     {
