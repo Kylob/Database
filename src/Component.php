@@ -12,7 +12,7 @@ class Component extends Driver
      * @param string|array $query  An SQL statement.
      * @param string|array $values The query parameters.
      * 
-     * @return mixed Either false if there was a problem, or whatever ``$this->execute()``d.
+     * @return mixed Either ``false`` if there was a problem, or whatever the ``$db->execute()``d.
      *
      * ```php
      * $db->exec(array(
@@ -37,11 +37,11 @@ class Component extends Driver
     /**
      * Insert new records into a database table.
      * 
-     * @param string|int $table Either the database table name, or the prepared statement id you got from calling this the first time.  You can also include 'INTO' here which is handy for prepending a qualifier eg. 'OR IGNORE INTO table'
-     * @param array      $data  Either the table column names (when preparing a statement), or a row of values (to insert), or both as an ``array(name => value)`` of columns to only insert one record and save yourself some typing.
-     * @param string     $and   Anything you would like to add at the end of the query eg. 'ON DUPLICATE KEY UPDATE ...'
+     * @param string|int $table Either the database table name, or the prepared statement id you got from calling this the first time.  You can also include *'INTO'* here which is handy for prepending a qualifier eg. *'OR IGNORE INTO table'*.
+     * @param array      $data  Either the table column names (when preparing a statement), or a row of values (to insert).  If you are only inserting one record and want to save yourself some typing, then make this an ``array(name => value, ...)`` of columns.
+     * @param string     $and   Anything you would like to add at the end of the query eg. *'ON DUPLICATE KEY UPDATE ...'*.
      * 
-     * @return bool|int Either false if there was an error, or a prepared statement to keep passing off as the $table (remember to ``$db->close($stmt)``), or the id of the row you just inserted.
+     * @return bool|int Either ``false`` if there was an error, a prepared ``$stmt`` to keep passing off as the **$table**, or the ``$id`` of the row you just inserted.  Don't forget to ``$db->close($stmt)``.
      *
      * ```php
      * if ($stmt = $db->insert('employees', array('id', 'name', 'title'))) {
@@ -91,12 +91,12 @@ class Component extends Driver
     /**
      * Modify records in a database table.
      * 
-     * @param string|int $table Either the database table name, or the prepared statement id you got from calling this the first time.  You can also include 'SET' here which is handy for getting some updates in that we can't otherwise do eg. 'table SET date = NOW(),'
+     * @param string|int $table Either the database table name, or the prepared statement id you got from calling this the first time.  You can also include *'SET'* here which is handy for getting some updates in that we can't otherwise do eg. *'table SET date = NOW(),'*.
      * @param array      $id    Either the name of the column with the unique identifier you will be referencing (when preparing a statement), or the unique identifier of the column you are updating.
-     * @param array      $data  Either the table column names (when preparing a statement), or a row of values (to update), or both as an ``array(name => value)`` of columns to only update one record and save yourself some typing.
-     * @param string     $and   Anything you would like to add at the end of the query after the WHERE eg. 'AND approved = 'Y'
+     * @param array      $data  Either the table column names (when preparing a statement), or a row of values (to update).  If you are only updating one record and want to save yourself some typing, then make this an ``array(name => value, ...)`` of columns.
+     * @param string     $and   Anything you would like to add at the end of the query after the WHERE eg. *'AND approved = "Y"'*.
      * 
-     * @return bool|int Either false if there was an error, or a prepared statement to keep passing off as the $table (remember to ``$db->close($stmt)``), or the number of rows affected.
+     * @return bool|int Either ``false`` if there was an error, a prepared ``$stmt`` to keep passing off as the **$table**, or the ``$num`` of rows affected.  Don't forget to ``$db->close($stmt)``.
      *
      * ```php
      * if (!$db->update('employees SET id = 101', 'id', array(
@@ -147,11 +147,11 @@ class Component extends Driver
     /**
      * Either update or insert records depending on whether they already exist or not.
      * 
-     * @param string|int $table Either the database table name, or the prepared statement id you got from calling this the first time.  You cannot include 'SET' or 'INTO' here.
-     * @param array      $id    Either the name of the column with the unique identifier you will be referencing (when preparing a statement), or the unique identifier of the column you are updating.
-     * @param array      $data  Either the table column names (when preparing a statement), or a row of values (to upsert), or both as an ``array(name => value)`` of columns to only upsert one record and save yourself some typing.
+     * @param string|int $table Either the database table name, or the prepared statement id you got from calling this the first time.  You cannot include *'SET'* or *'INTO'* here.
+     * @param array      $id    Either the name of the column with the unique identifier you will be referencing (when preparing a statement), or the unique identifier of the column you are upserting.
+     * @param array      $data  Either the table column names (when preparing a statement), or a row of values (to upsert).  If you are only upserting one record and want to save yourself some typing, then make this an ``array(name => value, ...)`` of columns.
      * 
-     * @return bool|int Either false if there was an error, or a prepared statement to keep passing off as the $table (remember to ``$db->close($stmt)``), or the id of the row that was upserted.
+     * @return bool|int Either ``false`` if there was an error, a prepared ``$stmt`` to keep passing off as the **$table**, or the ``$id`` of the row that was upserted.  Don't forget to ``$db->close($stmt)``.
      *
      * ```php
      * if ($stmt = $db->upsert('employees', 'id', array('name', 'title'))) {
@@ -204,7 +204,7 @@ class Component extends Driver
      * @param string|array $values The query parameters.
      * @param string       $fetch  How you would like your row.
      * 
-     * @return bool|int Either false if there was a problem, or a statement that you can ``$db->fetch($result)`` rows from.  Remember to ``$db->close($result)``.
+     * @return bool|int Either ``false`` if there was a problem, or a statement that you can ``$db->fetch($result)`` rows from.  Don't forget to ``$db->close($result)``.
      *
      * ```php
      * if ($result = $db->query('SELECT name, title FROM employees', '', 'assoc')) {
@@ -241,7 +241,7 @@ class Component extends Driver
      * @param string|array $values The query parameters.
      * @param string       $fetch  How you would like your row.
      * 
-     * @return array No false heads up here.  You either have records, or you don't.
+     * @return array No false heads up here.  You either have rows, or you don't.
      *
      * ```php
      * foreach ($db->all('SELECT id, name, title FROM employees') as $row) {
@@ -263,12 +263,12 @@ class Component extends Driver
     }
 
     /**
-     * Get all of the ids from your query, or whatever the first column you selected is.
+     * Get all of the id's from your query, or whatever the first column you requested is.
      * 
      * @param string|array $select A SELECT statement.
      * @param string|array $values The query parameters.
      * 
-     * @return bool|array Either false if there were no rows, or an array of every rows first value
+     * @return bool|array Either ``false`` if there were no rows, or an ``array()`` of every rows first value.
      *
      * ```php
      * if ($ids = $db->ids('SELECT id FROM employees WHERE title = ?', 'Intern')) {
@@ -296,7 +296,7 @@ class Component extends Driver
      * @param string|array $values The query parameters.
      * @param string       $fetch  How you would like your row.
      * 
-     * @return bool|mixed Either false if there was no row, or the first one ``$fetch``ed.
+     * @return bool|array Either ``false`` if there was no row, or an ``array()`` of the first one fetched.
      *
      * ```php
      * if ($janitor = $db->row('SELECT id, name FROM employees WHERE title = ?', 'Janitor', 'assoc')) {
@@ -320,7 +320,7 @@ class Component extends Driver
      * @param string|array $select A SELECT statement.
      * @param mixed        $values The query parameters.
      * 
-     * @return bool|string Either false if there was no row, or the value you are looking for.
+     * @return bool|string Either ``false`` if there was no row, or the ``$value`` you are looking for.
      *
      * ```php
      * echo $db->value('SELECT COUNT(*) FROM employees'); // 7
@@ -335,9 +335,9 @@ class Component extends Driver
      * Prepare a query to be executed.
      * 
      * @param string|array $query An SQL statement.
-     * @param string       $fetch How you would like your SELECT rows returned.  Either 'obj', 'assoc', 'named', 'both', or 'num' (the default).
+     * @param string       $fetch How you would like the SELECT rows returned.  Either '**obj**', '**assoc**', '**named**', '**both**', or '**num**' (the default).
      * 
-     * @return bool|int Either false if there was an error, or an id that can now be``$this->execute()``d or ``$this->fetch()``d.
+     * @return bool|int Either ``false`` if there was an error, or a ``$stmt`` id that can be``$db->execute()``d or ``$db->fetch()``ed.  Don't forget to ``$db->close($stmt)``.
      */
     public function prepare($query, $fetch = null)
     {
@@ -372,10 +372,10 @@ class Component extends Driver
     /**
      * Execute a prepared statement.
      * 
-     * @param int          $stmt   ``$this->prepare(...)``d statement's return value.
+     * @param int          $stmt   A ``$db->prepare(...)``d statement's return value.
      * @param string|array $values The query parameters.  If there is only one or none, then this can be a string.
      * 
-     * @return mixed False if there was an error, True for a SELECT query, the inserted id for an INSERT query, and the number of affected rows for everything else.
+     * @return mixed Either ``false`` if there was an error, ``true`` for a SELECT query, the inserted ``$id`` for an INSERT query, or the ``$num`` of affected rows for everything else.
      */
     public function execute($stmt, $values = null)
     {
@@ -407,9 +407,9 @@ class Component extends Driver
     /**
      * Get the next row from an executed SELECT statement.
      * 
-     * @param int $stmt ``$this->prepare(...)``d statement's return value.
+     * @param int $stmt A ``$db->prepare(...)``d statement's return value.
      * 
-     * @return mixed What you requested in ``$this->prepare()``.
+     * @return mixed
      */
     public function fetch($stmt)
     {
@@ -421,9 +421,9 @@ class Component extends Driver
     }
 
     /**
-     * Closes ``$this->prepared()``d statement to free up the database connection.
+     * Closes a ``$db->prepared()``d statement to free up the database connection.
      * 
-     * @param int $stmt ``$this->prepare(...)``d statement's return value.
+     * @param int $stmt A ``$db->prepare(...)``d statement's return value.
      */
     public function close($stmt)
     {
@@ -439,7 +439,7 @@ class Component extends Driver
     }
 
     /**
-     * Returns a query with values in place so that you can stare at it, and try to figure out what is going on.
+     * Returns a **$query** with it's **$values** in place so that you can stare at it, and try to figure out what is going on.
      * 
      * @param string|array $query  An SQL statement.
      * @param mixed        $values The query parameters.
@@ -464,7 +464,7 @@ class Component extends Driver
     /**
      * Returns information about the previously executed query.
      * 
-     * @param string $value If you don't want a whole array, the you can specify the specific value you do want.  Either 'sql', 'count', 'prepared', 'executed', 'errors', 'average', 'total', or 'time'.
+     * @param string $value If you don't want the whole array, then you can specify the specific value you do want.  Either '**sql**', '**count**', '**prepared**', '**executed**', '**errors**', '**average**', '**total**', or '**time**'.
      * 
      * @return mixed
      */
