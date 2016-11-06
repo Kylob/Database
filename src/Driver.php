@@ -11,9 +11,9 @@ class Driver
     private $construct;
 
     /**
-     * Either implement an established PDO instance, or set up a lazy database connection that we only connect to if and when you actually use it.  Every $dsn string with a '**dbname**' is saved in a databases.yml file (if you have the Symfony Yaml and BootPress Page components installed) so that you only need to spell everything out once, and then just refer to the 'dbname' in your code.
+     * Either implement an established PDO instance, or set up a lazy database connection that we only connect to if and when you actually use it.  Every **$dsn** string with a '**dbname**' is saved in a databases.yml file (if you have the Symfony Yaml and BootPress Page components installed) so that you only need to spell everything out once, and then just refer to the '**dbname**' in your code.
      * 
-     * @param string|object $dsn Either a PDO Instance, a DSN string that contains the information required to connect to the database, or the 'dbname' saved in the databases.yml file.  Some examples are:
+     * @param string|object $dsn Either a PDO Instance, a DSN string that contains the information required to connect to the database, or the '**dbname**' saved in the databases.yml file.  Some examples are:
      * 
      * - [MySQL](http://php.net/manual/en/ref.pdo-mysql.connection.php "mysql")
      *     - mysql:host=[name];port=[number];dbname=[database];unix_socket=[instead of host or port];charset=[utf-8]
@@ -80,6 +80,26 @@ class Driver
             $this->driver($driver);
             $this->construct = array($dsn, $username, $password, $options, $exec);
         }
+    }
+
+    /**
+     * @return object The database connection.  This is how we create lazy connections.
+     */
+    public function connection()
+    {
+        if (is_null($this->connection) && !is_null($this->construct)) {
+            list($dsn, $username, $password, $options, $exec) = $this->construct;
+            try {
+                $this->connection = new \PDO($dsn, $username, $password, $options);
+            } catch (\PDOException $e) {
+                throw new \Exception($e->getMessage());
+            }
+            foreach ($exec as $sql) {
+                $this->connection->exec($sql);
+            }
+        }
+
+        return $this->connection;
     }
 
     /**
@@ -164,26 +184,6 @@ class Driver
         }
 
         return $errors;
-    }
-
-    /**
-     * @return object The database connection.  This is how we create lazy connections.
-     */
-    public function connection()
-    {
-        if (is_null($this->connection) && !is_null($this->construct)) {
-            list($dsn, $username, $password, $options, $exec) = $this->construct;
-            try {
-                $this->connection = new \PDO($dsn, $username, $password, $options);
-            } catch (\PDOException $e) {
-                throw new \Exception($e->getMessage());
-            }
-            foreach ($exec as $sql) {
-                $this->connection->exec($sql);
-            }
-        }
-
-        return $this->connection;
     }
 
     protected function dbPrepare($query)
