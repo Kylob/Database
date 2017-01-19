@@ -2,6 +2,7 @@
     "name": "bootpress/database",
     "description": "A PDO wrapper with lazy connections and query profiling.",
     "keywords": ["bootpress", "database", "sql", "pdo"],
+    "homepage": "https://www.bootpress.org/components/database.html",
     "license": "MIT",
     "authors": [
         {
