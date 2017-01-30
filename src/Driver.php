@@ -197,12 +197,12 @@ class Driver
 
     protected function dbPrepare($query)
     {
-        return $this->connection->prepare($query); // returns (mixed) $stmt object or false
+        return $this->connection()->prepare($query); // returns (mixed) $stmt object or false
     }
 
     protected function dbPrepareError()
     {
-        return ($info = $this->connection->errorInfo()) ? "Code: {$info[0]} Error: ({$info[1]}) {$info[2]}" : false; // returns (string) error or false
+        return ($info = $this->connection()->errorInfo()) ? "Code: {$info[0]} Error: ({$info[1]}) {$info[2]}" : false; // returns (string) error or false
     }
 
     protected function dbExecute($stmt, array $values, $reference)
@@ -243,7 +243,7 @@ class Driver
 
     protected function dbInserted()
     {
-        return (int) $this->connection->lastInsertId(); // returns (int) last inserted row id or sequence value
+        return (int) $this->connection()->lastInsertId(); // returns (int) last inserted row id or sequence value
     }
 
     protected function dbAffected($stmt)
@@ -258,6 +258,6 @@ class Driver
 
     protected function dbEscape($string)
     {
-        return $this->connection->quote($string);
+        return $this->connection()->quote($string);
     }
 }

@@ -344,7 +344,6 @@ class Component extends Driver
         $query = (is_array($query)) ? trim(implode("\n", $query)) : trim($query);
         $stmt = count(static::$logs[$this->id]) + 1;
         $start = microtime(true);
-        $this->connection();
         $this->prepared[$stmt]['obj'] = $this->dbPrepare($query);
         static::$logs[$this->id][$stmt] = array(
             'sql' => $query,
