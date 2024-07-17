@@ -122,7 +122,9 @@ class Component extends Driver
 
             return $this->execute($table, $data);
         }
-        $first = each($data);
+        // $first = each($data);
+		$first = ['key'=>key($data), 'value'=>current($data)];
+		next($data);
         $single = (is_array($first['value'])) ? $first['value'] : false;
         if ($single) {
             $data = array_keys($single);
@@ -178,7 +180,9 @@ class Component extends Driver
                 return $this->execute($this->prepared[$table]['ref']['insert'], $data);
             }
         }
-        $first = each($data);
+        // $first = each($data);
+		$first = ['key'=>key($data), 'value'=>current($data)];
+		next($data);
         $single = (is_array($first['value'])) ? $first['value'] : false;
         if ($single) {
             $data = array_keys($single);
